@@ -173,7 +173,7 @@ class GeoNodeMapTest(TestCase):
 
         for filename in os.listdir(datadir):
             basename, extension = os.path.splitext(filename)
-            if extension.lower() in ['.asc', '.tif', '.shp', '.zip']:
+            if extension.lower() in ['.tif', '.shp', '.zip']:
                 if filename not in BAD_LAYERS:
                     expected_layers.append(os.path.join(datadir, filename))
                 else:
@@ -287,7 +287,7 @@ class GeoNodeMapTest(TestCase):
     def test_repeated_upload(self):
         """Upload the same file more than once
         """
-        thefile = os.path.join(TEST_DATA, 'test_grid.asc')
+        thefile = os.path.join(TEST_DATA, 'test_grid.tif')
         uploaded1 = file_upload(thefile)
         check_layer(uploaded1)
         uploaded2 = file_upload(thefile, overwrite=True)
