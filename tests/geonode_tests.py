@@ -115,6 +115,7 @@ class GeoNodeMapTest(TestCase):
         shp_layer_info = gn_cat.get_by_uuid(shp_layer.uuid)
         assert shp_layer_info == None
 
+        # Clean up and completely delete the layer
         shp_layer.delete()
 
         # Test Uploading then Deleting a TIFF file from GeoNetwork
@@ -124,6 +125,7 @@ class GeoNodeMapTest(TestCase):
         tif_layer_info = gn_cat.get_by_uuid(tif_layer.uuid)
         assert tif_layer_info == None
 
+        # Clean up and completely delete the layer
         tif_layer.delete()
 
     def test_delete_layer(self):
@@ -241,6 +243,7 @@ class GeoNodeMapTest(TestCase):
         #assert len(metadata) > 0, msg
         # Check the keywords are recognized too
 
+        # Clean up and completely delete the layers
         for layer in expected_layers:
             layer_name = layers[layer]
             Layer.objects.get(name=layer_name).delete()
@@ -267,6 +270,7 @@ class GeoNodeMapTest(TestCase):
         uploaded = file_upload(thefile)
         check_layer(uploaded)
 
+        # Clean up and completely delete the layer
         uploaded.delete()
 
     def test_bad_shapefile(self):
@@ -291,6 +295,7 @@ class GeoNodeMapTest(TestCase):
         uploaded = file_upload(thefile)
         check_layer(uploaded)
 
+        # Clean up and completely delete the layer
         uploaded.delete()
     
     def test_repeated_upload(self):
@@ -309,8 +314,10 @@ class GeoNodeMapTest(TestCase):
                'overwrite=False but got %s' % (thefile, uploaded3.name))
         assert uploaded1.name != uploaded3.name, msg
 
-        uploaded1.delete()
-        #uploaded2.delete() #overwrites uploaded1
+        # Clean up and completely delete the layers
+
+        # uploaded1 is overwritten by uploaded2 ... no need to delete it
+        uploaded2.delete()
         uploaded3.delete()
     
     # gs_helpers tests
@@ -348,4 +355,5 @@ class GeoNodeMapTest(TestCase):
         # Verify that the store was deleted 
         self.assertRaises(FailedRequestError, lambda: gs_cat.get_store(store_name))
 
-        # Clean up by deleting the layer from GeoNode's DB and GeoNetwork?
+        # Clean up by deleting the layer from GeoNode's DB and GeoNetwork
+        shp_layer.delete()
