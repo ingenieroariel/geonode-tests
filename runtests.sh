@@ -7,6 +7,7 @@ if [ ! -d "./geonode_test_data" ]; then
     echo ">>>> Downloading Test Data"
     wget "http://dev.geonode.org/test-data/geonode_test_data.tgz"
     tar xvzf geonode_test_data.tgz
+    rm geonode_test_data.tgz
 fi
 
 # Activate the virtualenv
