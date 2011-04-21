@@ -5,3 +5,7 @@ nosetests.xml
 *.pyc
 *.~
 *.swp
+geonode
+downloaded
+tomcat
+venv

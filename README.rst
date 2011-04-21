@@ -1,8 +1,9 @@
 GeoNode Integration Test Suite
 
-To download the test data and run the test suite, use the following command
+To download the test data and run the test suite, use the following command::
 
-    ./runtests.sh
+    geonode-test ingenieroariel bulletproof
 
-Assumes that a working checkout/build of geonode is located next to this repo
-on the filesystem and that GeoNode has been started in the default way.
+Assumes that you have the following packages already installed::
+
+    git python-dev python-imaging virtualenv

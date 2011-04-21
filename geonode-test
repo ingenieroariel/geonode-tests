@@ -40,6 +40,7 @@ if [ ! -d "./venv" ]; then
      echo ">>>> Creating the virtualenv and installing dependencies"
      virtualenv venv
      source venv/bin/activate
+     easy_install -U pip
      pip install downloaded/geonode-dependencies.pybundle
 fi
 
@@ -59,16 +60,19 @@ function checkup() {
 }
 
 echo ">>>> Clone/pull from the specified GeoNode repo and branch"
-checkup $USER geonode
+checkup $USER/geonode.git geonode
 cd geonode
 git checkout $BRANCH
 git pull
-cd src/
-pip install -e GeoNodePy
+cd src/GeoNodePy
+python setup.py develop
+cd ../../../
 
 echo ">>>> Start tomcat for testing."
 tomcat/bin/catalina.sh start
 # Run the tests
 echo ">>>> Running GeoNode Integration Tests" 
-python manage.py test
+# Having to do this again because starting tomcat disables the venv
+source venv/bin/activate
+django-admin.py test --settings=geonode.settings
 tomcat/bin/catalina.sh stop
