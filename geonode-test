@@ -1,0 +1,74 @@
+#!/bin/bash
+
+USER=$1
+BRANCH=$2
+GEONODE_URL="http://localhost:8000/"
+GEOSERVER_URL="http://localhost:8001/geoserver/"
+
+
+echo ">>>> Downloading components required for testing."
+mkdir -p downloaded
+cd downloaded
+wget -c "http://dev.geonode.org/test-data/geonode_test_data.tgz"
+wget -c "https://s3.amazonaws.com/geonodeariel/geonode-dependencies.pybundle"
+wget -c "https://s3.amazonaws.com/geonodeariel/geoserver-geonode-dev.war"
+wget -c "https://s3.amazonaws.com/geonodeariel/geonetwork.war"
+wget -c "https://s3.amazonaws.com/geonodeariel/tomcat.zip"
+wget -c "https://s3.amazonaws.com/geonodeariel/intermap.war"
+cd ..
+
+if [ ! -d "./geonode_test_data" ]; then
+    echo ">>>> Unpacking test data."
+    tar xvzf downloaded/geonode_test_data.tgz
+fi
+
+
+if [ ! -d "./tomcat" ]; then
+    echo ">>>> Unpacking fresh tomcat."
+    tar xvzf downloaded/tomcat.zip
+fi
+
+echo ">>>> Installing geoserver and geonetwork in tomcat."
+rm -rf tomcat/webapps/geoserver-geonode-dev*
+rm -rf tomcat/webapps/geonetwork*
+rm -rf tomcat/webapps/intermap*
+ln -s downloaded/geoserver-geonode-dev.war tomcat/webapps
+ln -s downloaded/geonetwork.war tomcat/webapps
+ln -s downloaded/intermap.war tomcat/webapps
+
+if [ ! -d "./venv" ]; then
+     echo ">>>> Creating the virtualenv and installing dependencies"
+     virtualenv venv
+     source venv/bin/activate
+     pip install downloaded/geonode-dependencies.pybundle
+fi
+
+echo ">>>> Activating the virtualenv"
+source venv/bin/activate
+
+function checkup() {
+  REPO="$1"
+  WORKING_DIR="$2"
+  if [ -d "${WORKING_DIR}" ];
+  then
+      echo "Updating ${WORKING_DIR} from upstream"
+      (cd "${WORKING_DIR}" && git pull)
+  else
+      git clone "git@github.com:${REPO}" "${WORKING_DIR}" || git clone "https://github.com/${REPO}" "${WORKING_DIR}"
+  fi
+}
+
+echo ">>>> Clone/pull from the specified GeoNode repo and branch"
+checkup $USER geonode
+cd geonode
+git checkout $BRANCH
+git pull
+cd src/
+pip install -e GeoNodePy
+
+echo ">>>> Start tomcat for testing."
+tomcat/bin/catalina.sh start
+# Run the tests
+echo ">>>> Running GeoNode Integration Tests" 
+python manage.py test
+tomcat/bin/catalina.sh stop

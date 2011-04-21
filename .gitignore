@@ -2,3 +2,6 @@
 .noseids
 geonode_test_data/
 nosetests.xml
+*.pyc
+*.~
+*.swp
