@@ -32,9 +32,9 @@ echo ">>>> Installing geoserver and geonetwork in tomcat."
 rm -rf tomcat/webapps/geoserver-geonode-dev*
 rm -rf tomcat/webapps/geonetwork*
 rm -rf tomcat/webapps/intermap*
-ln -s downloaded/geoserver-geonode-dev.war tomcat/webapps
-ln -s downloaded/geonetwork.war tomcat/webapps
-ln -s downloaded/intermap.war tomcat/webapps
+cp downloaded/geoserver-geonode-dev.war tomcat/webapps
+cp downloaded/geonetwork.war tomcat/webapps
+cp downloaded/intermap.war tomcat/webapps
 
 if [ ! -d "./venv" ]; then
      echo ">>>> Creating the virtualenv and installing dependencies"
@@ -77,5 +77,9 @@ tomcat/bin/catalina.sh start
 echo ">>>> Running GeoNode Integration Tests" 
 # Having to do this again because starting tomcat disables the venv
 source venv/bin/activate
-django-admin.py test --settings=geonode.settings --verbosity=2
+cp scripts/local_settings.py geonode/src/GeoNodePy/geonode/local_settings.py
+./geonode/shared/dev-paste.ini start
+rm geonode/src/GeoNodePy/geonode/development.db
+django-admin.py test --settings=geonode.settings --verbosity=1
+./geonode/shared/dev-paste.ini stop
 tomcat/bin/catalina.sh stop

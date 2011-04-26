@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import geonode.maps.models
 
 from geonode.maps.models import Layer
-from geonode.maps.utils import upload, file_upload, GeoNodeException
+from geonode.maps.helpers import upload, file_upload, GeoNodeException
 
 from geoserver.catalog import FailedRequestError
 
@@ -14,7 +14,7 @@ from geonode.maps.gs_helpers import cascading_delete
 import os
 import urllib2
 
-TEST_DATA = os.path.join(settings.PROJECT_ROOT, 'geonode_test_data')
+TEST_DATA = os.path.join(os.path.dirname(__file__), '..', 'geonode_test_data')
 
 
 def check_layer(uploaded):
