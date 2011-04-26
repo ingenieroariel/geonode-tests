@@ -2,8 +2,6 @@
 
 USER=$1
 BRANCH=$2
-GEONODE_URL="http://localhost:8000/"
-GEOSERVER_URL="http://localhost:8001/geoserver/"
 
 
 echo ">>>> Downloading components required for testing."
