@@ -68,6 +68,9 @@ cd src/GeoNodePy
 python setup.py develop
 cd ../../../
 
+#FIXME We should not need that geoserver_token file
+touch geonode/geoserver_token
+
 echo ">>>> Start tomcat for testing."
 tomcat/bin/catalina.sh start
 # Run the tests
