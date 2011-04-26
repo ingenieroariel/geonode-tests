@@ -74,5 +74,5 @@ tomcat/bin/catalina.sh start
 echo ">>>> Running GeoNode Integration Tests" 
 # Having to do this again because starting tomcat disables the venv
 source venv/bin/activate
-django-admin.py test --settings=geonode.settings
+django-admin.py test --settings=geonode.settings --verbosity=2
 tomcat/bin/catalina.sh stop
