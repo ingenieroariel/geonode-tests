@@ -77,7 +77,6 @@ echo ">>>> Running GeoNode Integration Tests"
 source venv/bin/activate
 cp scripts/local_settings.py geonode/src/GeoNodePy/geonode/local_settings.py
 ./geonode/shared/dev-paste.ini start
-rm geonode/src/GeoNodePy/geonode/development.db
 django-admin.py test --settings=geonode.settings --verbosity=1
 ./geonode/shared/dev-paste.ini stop
 tomcat/bin/catalina.sh stop
