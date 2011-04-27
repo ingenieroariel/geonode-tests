@@ -3,6 +3,11 @@
 USER=$1
 BRANCH=$2
 
+# Make sure paster and tomcat are not running
+#FIXME: Filter by tomcat and paster
+killall -9 java
+killall -9 python
+rm geonode/src/GeoNodePy/geonode/development.db
 
 echo ">>>> Downloading components required for testing."
 mkdir -p downloaded
@@ -40,6 +45,7 @@ if [ ! -d "./venv" ]; then
      source venv/bin/activate
      easy_install -U pip
      pip install downloaded/geonode-dependencies.pybundle
+     pip install rudolf
 fi
 
 echo ">>>> Activating the virtualenv"
@@ -79,4 +85,4 @@ cp scripts/local_settings.py geonode/src/GeoNodePy/geonode/local_settings.py
 ./geonode/shared/dev-paste.ini start
 django-admin.py test --settings=geonode.settings --verbosity=1
 ./geonode/shared/dev-paste.ini stop
-tomcat/bin/catalina.sh stop
+tomcat/bin/catalina.sh stop --force
