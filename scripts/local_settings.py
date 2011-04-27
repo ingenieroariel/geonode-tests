@@ -11,9 +11,11 @@ DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3',
                          'TEST_NAME': os.path.join(PROJECT_ROOT,
                                                    'development.db')}}
 
+GEOSERVER_CREDENTIALS=('foo', 'bar')
+
 NOSE_ARGS = [
-#      '--failed',
-#      '--stop',
+      '--failed',
+      '--stop',
       '--verbosity=2',
       '--cover-erase',
       '--with-doctest',
@@ -24,6 +26,7 @@ NOSE_ARGS = [
       '--cover-tests',
       '--detailed-errors',
       '--with-xunit',
-#      '--with-color',
-#      '--with-pdb',
+      '--with-color',
+#      '--pdb',
+#      '--pdb-failures',
       ]
